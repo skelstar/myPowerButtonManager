@@ -38,8 +38,6 @@ void setup() {
 	Serial.begin(9600);
 	Serial.printf("\nmyPowerButtonManager\n");
 
-	esp_sleep_enable_ext0_wakeup(GPIO_NUM_33, LOW); //1 = High, 0 = Low
-
 	powerButton.begin();
 }
 //--------------------------------------------------------------------------------
