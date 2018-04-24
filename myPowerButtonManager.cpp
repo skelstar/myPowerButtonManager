@@ -33,21 +33,21 @@ void myPowerButtonManager::begin() {
 		case 6: esp_sleep_enable_ext0_wakeup(GPIO_NUM_6, _activeState == 1 ? 0 : 1); break;
 		case 7: esp_sleep_enable_ext0_wakeup(GPIO_NUM_7, _activeState == 1 ? 0 : 1); break;
 		case 8: esp_sleep_enable_ext0_wakeup(GPIO_NUM_8, _activeState == 1 ? 0 : 1); break;
-		case 9: esp_sleep_enable_ext0_wakeup(GPIO_NUM_9, _activeState == 1 ? 0 : 1); break;
-		case 10: esp_sleep_enable_ext0_wakeup(GPIO_NUM_10, _activeState == 1 ? 0 : 1); break;
-		case 11: esp_sleep_enable_ext0_wakeup(GPIO_NUM_11, _activeState == 1 ? 0 : 1); break;
+		// case 9: esp_sleep_enable_ext0_wakeup(GPIO_NUM_9, _activeState == 1 ? 0 : 1); break;	// flash
+		// case 10: esp_sleep_enable_ext0_wakeup(GPIO_NUM_10, _activeState == 1 ? 0 : 1); break;	// flash
+		// case 11: esp_sleep_enable_ext0_wakeup(GPIO_NUM_11, _activeState == 1 ? 0 : 1); break;	// flash
 		case 12: esp_sleep_enable_ext0_wakeup(GPIO_NUM_12, _activeState == 1 ? 0 : 1); break;
 		case 13: esp_sleep_enable_ext0_wakeup(GPIO_NUM_13, _activeState == 1 ? 0 : 1); break;
 		case 14: esp_sleep_enable_ext0_wakeup(GPIO_NUM_14, _activeState == 1 ? 0 : 1); break;
 		case 15: esp_sleep_enable_ext0_wakeup(GPIO_NUM_15, _activeState == 1 ? 0 : 1); break;
 		case 16: esp_sleep_enable_ext0_wakeup(GPIO_NUM_16, _activeState == 1 ? 0 : 1); break;
 		case 17: esp_sleep_enable_ext0_wakeup(GPIO_NUM_17, _activeState == 1 ? 0 : 1); break;
-		case 18: esp_sleep_enable_ext0_wakeup(GPIO_NUM_18, _activeState == 1 ? 0 : 1); break;
-		case 19: esp_sleep_enable_ext0_wakeup(GPIO_NUM_19, _activeState == 1 ? 0 : 1); break;
-		// case 20: esp_sleep_enable_ext0_wakeup(GPIO_NUM_20, activeState); break;
-		case 21: esp_sleep_enable_ext0_wakeup(GPIO_NUM_21, _activeState == 1 ? 0 : 1); break;
-		case 22: esp_sleep_enable_ext0_wakeup(GPIO_NUM_22, _activeState == 1 ? 0 : 1); break;
-		case 23: esp_sleep_enable_ext0_wakeup(GPIO_NUM_23, _activeState == 1 ? 0 : 1); break;
+		case 18: esp_sleep_enable_ext0_wakeup(GPIO_NUM_18, _activeState == 1 ? 0 : 1); break;	//SPI
+		case 19: esp_sleep_enable_ext0_wakeup(GPIO_NUM_19, _activeState == 1 ? 0 : 1); break;	//SPI
+		// case 20: esp_sleep_enable_ext0_wakeup(GPIO_NUM_20, activeState); break;	// illegal
+		case 21: esp_sleep_enable_ext0_wakeup(GPIO_NUM_21, _activeState == 1 ? 0 : 1); break;	//i2c
+		case 22: esp_sleep_enable_ext0_wakeup(GPIO_NUM_22, _activeState == 1 ? 0 : 1); break;	//i2c
+		case 23: esp_sleep_enable_ext0_wakeup(GPIO_NUM_23, _activeState == 1 ? 0 : 1); break;	// didnt work
 		// case 24: esp_sleep_enable_ext0_wakeup(GPIO_NUM_24,_activeState == 1 ? 0 : 1); break;
 		case 25: esp_sleep_enable_ext0_wakeup(GPIO_NUM_25, _activeState == 1 ? 0 : 1); break;
 		case 26: esp_sleep_enable_ext0_wakeup(GPIO_NUM_26, _activeState == 1 ? 0 : 1); break;
@@ -138,6 +138,10 @@ void myPowerButtonManager::setState(uint8_t state) {
 		_state = state;
 		_callback(_state);
 	}
+}
+//--------------------------------------------------------------------------------
+uint8_t myPowerButtonManager::getState() {
+	return _state;
 }
 //--------------------------------------------------------------------------------
 bool myPowerButtonManager::wakeupCausedByButton() {

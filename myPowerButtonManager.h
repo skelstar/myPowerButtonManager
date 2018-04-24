@@ -24,6 +24,7 @@ class myPowerButtonManager
 		void serviceButton();
 		bool isRunning();
 		void setState(uint8_t state);
+		uint8_t getState();
 
 	private:
 

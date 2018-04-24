@@ -1,6 +1,6 @@
 #include <myPowerButtonManager.h>
 
-#define POWER_UP_BUTTON 33
+#define POWER_UP_BUTTON 13
 
 void powerupEvent(int state);
 
