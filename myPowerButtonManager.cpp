@@ -93,9 +93,13 @@ void myPowerButtonManager::serviceButton() {
 			break;
 		case ST_POWERED_UP_WAIT_RELEASE:
 			if (isPressed() == false) {
-				_state = ST_RUNNING;
+				_state = ST_TR_RUNNING;
 				_callback(_state);
 			}
+			break;
+		case ST_TR_RUNNING:
+			_state = ST_RUNNING;
+			_callback(_state);
 			break;
 		case ST_RUNNING:
 			if (isPressed()) {
@@ -106,7 +110,7 @@ void myPowerButtonManager::serviceButton() {
 			break;
 		case ST_POWERING_DOWN:
 			if (isPressed() == false) {
-				_state = ST_RUNNING;
+				_state = ST_TR_RUNNING;
 				_callback(_state);
 			}
 			else if (millis() - _startPoweringDown > _powerDownMillis) {
@@ -131,6 +135,7 @@ void myPowerButtonManager::setState(uint8_t state) {
 	// make sure state exists
 	if (state == ST_POWERING_UP ||
 		state == ST_POWERED_UP_WAIT_RELEASE ||
+		state == ST_TR_RUNNING ||
 		state == ST_RUNNING ||
 		state == ST_POWERING_DOWN ||
 		state == ST_POWERING_DOWN_WAIT_RELEASE ||

@@ -10,6 +10,7 @@ class myPowerButtonManager
 		enum StateCode {
 			ST_POWERING_UP = 0,
 			ST_POWERED_UP_WAIT_RELEASE,
+			ST_TR_RUNNING,
 			ST_RUNNING,
 			ST_POWERING_DOWN,
 			ST_POWERING_DOWN_WAIT_RELEASE,

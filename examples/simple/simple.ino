@@ -15,6 +15,9 @@ void powerupEvent(int state) {
 		case powerButton.ST_POWERED_UP_WAIT_RELEASE:
 			Serial.printf("State: ST_POWERED_UP_WAIT_RELEASE\n");
 			break;
+		case powerButton.ST_TR_RUNNING:
+			Serial.printf("State: ST_TR_RUNNING\n");
+			break;	
 		case powerButton.ST_RUNNING:
 			Serial.printf("State: ST_RUNNING\n");
 			break;
@@ -44,6 +47,6 @@ void setup() {
 void loop() {
 	powerButton.serviceButton();
 
-	delay(500);
+	delay(100);
 }
 //--------------------------------------------------------------------------------
