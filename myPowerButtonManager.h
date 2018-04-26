@@ -22,7 +22,7 @@ class myPowerButtonManager
 
 		myPowerButtonManager( int button, int activeState, long powerupMillis, long powerDownMillis, PowerUpEventCallback callback );
 		void begin();
-		void serviceButton();
+		void serviceButton(bool debug);
 		bool isRunning();
 		void setState(uint8_t state);
 		uint8_t getState();
