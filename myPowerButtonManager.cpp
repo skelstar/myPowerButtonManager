@@ -2,11 +2,17 @@
 #include "myPowerButtonManager.h"
 /*
 enum StateCode {
-	ST_POWERING_UP = 0,
+	TR_POWERING_UP = 0,
+	ST_POWERING_UP,
+	TR_POWERED_UP_WAIT_RELEASE,
 	ST_POWERED_UP_WAIT_RELEASE,
+	TR_RUNNING,
 	ST_RUNNING,
+	TR_POWERING_DOWN,
 	ST_POWERING_DOWN,
+	TR_POWERING_DOWN_WAIT_RELEASE,
 	ST_POWERING_DOWN_WAIT_RELEASE,
+	TR_POWER_OFF
 	ST_POWER_OFF
 };
 */
@@ -80,55 +86,67 @@ void myPowerButtonManager::begin() {
 void myPowerButtonManager::serviceButton(bool debug) {
 
 	switch (_state) {
-		
+		case TR_POWERING_UP:
+			if (debug) Serial.printf("State: POWERING_UP\n");
+			_callback(TR_POWERING_UP);
+			_state = ST_POWERING_UP;
+			break;
 		case ST_POWERING_UP:
-			if (debug) Serial.printf("State: ST_POWERING_UP\n");
 			if (isPressed() == false) {
-				_state = ST_POWERING_DOWN_WAIT_RELEASE;
-				_callback(_state);
+				_state = TR_POWERING_DOWN_WAIT_RELEASE;
 			}
 			else if (millis() - _startPoweringUp > _powerUpMillis) {
-				_state = ST_POWERED_UP_WAIT_RELEASE;
-				_callback(_state);
+				_state = TR_POWERED_UP_WAIT_RELEASE;
 			}
+			break;
+		case TR_POWERED_UP_WAIT_RELEASE:
+			if (debug) Serial.printf("State: POWERED_UP_WAIT_RELEASE\n");
+			_callback(_state);
+			_state = ST_POWERED_UP_WAIT_RELEASE;
 			break;
 		case ST_POWERED_UP_WAIT_RELEASE:
-			if (debug) Serial.printf("State: ST_POWERED_UP_WAIT_RELEASE\n");
+			// waiting for button release
 			if (isPressed() == false) {
-				_state = ST_TR_RUNNING;
-				_callback(_state);
+				_state = TR_RUNNING;
 			}
 			break;
-		case ST_TR_RUNNING:
-			if (debug) Serial.printf("State: ST_TR_RUNNING\n");
+		case TR_RUNNING:
+			if (debug) Serial.printf("State: RUNNING\n");
+			_callback(TR_RUNNING);
 			_state = ST_RUNNING;
-			_callback(_state);
 			break;
 		case ST_RUNNING:
-			// if (debug) Serial.printf("State: ST_RUNNING\n");
 			if (isPressed()) {
 				_state = ST_POWERING_DOWN;
-				_callback(_state);
-				_startPoweringDown = millis();
 			}
+			break;
+		case TR_POWERING_DOWN:
+			if (debug) Serial.printf("State: POWERING_DOWN\n");
+			_startPoweringDown = millis();
+			_callback(TR_POWERING_DOWN);
+			_state = ST_POWERING_DOWN;
 			break;
 		case ST_POWERING_DOWN:
-			if (debug) Serial.printf("State: ST_POWERING_DOWN\n");
 			if (isPressed() == false) {
-				_state = ST_TR_RUNNING;
-				_callback(_state);
+				_state = TR_RUNNING;
 			}
 			else if (millis() - _startPoweringDown > _powerDownMillis) {
-				_state = ST_POWERING_DOWN_WAIT_RELEASE;
-				_callback(_state);
+				_state = TR_POWERING_DOWN_WAIT_RELEASE;
 			}
 			break;
+		case TR_POWERING_DOWN_WAIT_RELEASE:
+			if (debug) Serial.printf("State: POWERING_DOWN_WAIT_RELEASE\n");
+			_callback(TR_POWERING_DOWN_WAIT_RELEASE);
+			_state = ST_POWERING_DOWN_WAIT_RELEASE;
+			break;
 		case ST_POWERING_DOWN_WAIT_RELEASE:
-			if (debug) Serial.printf("State: ST_POWERING_DOWN_WAIT_RELEASE\n");
 			if (isPressed() == false) {
-				_state = ST_POWER_OFF;
-				_callback(_state);
+				_state = TR_POWER_OFF;
 			}
+			break;
+		case TR_POWER_OFF:
+			if (debug) Serial.printf("State: POWER_OFF\n");
+			_state = ST_POWER_OFF;
 			break;
 	}
 }
@@ -139,15 +157,13 @@ bool myPowerButtonManager::isRunning() {
 //--------------------------------------------------------------------------------
 void myPowerButtonManager::setState(uint8_t state) {
 	// make sure state exists
-	if (state == ST_POWERING_UP ||
-		state == ST_POWERED_UP_WAIT_RELEASE ||
-		state == ST_TR_RUNNING ||
-		state == ST_RUNNING ||
-		state == ST_POWERING_DOWN ||
-		state == ST_POWERING_DOWN_WAIT_RELEASE ||
-		state == ST_POWER_OFF) {
+	if (state == TR_POWERING_UP ||
+		state == TR_POWERED_UP_WAIT_RELEASE ||
+		state == TR_RUNNING ||
+		state == TR_POWERING_DOWN ||
+		state == TR_POWERING_DOWN_WAIT_RELEASE ||
+		state == TR_POWER_OFF) {
 		_state = state;
-		_callback(_state);
 	}
 }
 //--------------------------------------------------------------------------------
