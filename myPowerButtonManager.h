@@ -8,18 +8,18 @@ class myPowerButtonManager
 	public:
 
 		enum StateCode {
-			TR_POWERING_UP = 0,
-			ST_POWERING_UP,
-			TR_POWERED_UP_WAIT_RELEASE,
-			ST_POWERED_UP_WAIT_RELEASE,
-			TR_RUNNING,
-			ST_RUNNING,
-			TR_POWERING_DOWN,
-			ST_POWERING_DOWN,
-			TR_POWERING_DOWN_WAIT_RELEASE,
-			ST_POWERING_DOWN_WAIT_RELEASE,
-			TR_POWER_OFF,
-			ST_POWER_OFF
+			TN_TO_POWERING_UP = 0,
+			STATE_POWERING_UP,
+			TN_TO_POWERED_UP_WAIT_RELEASE,
+			STATE_POWERED_UP_WAIT_RELEASE,
+			TN_TO_RUNNING,
+			STATE_RUNNING,
+			TN_TO_POWERING_DOWN,
+			STATE_POWERING_DOWN,
+			TN_TO_POWERING_DOWN_WAIT_RELEASE,
+			STATE_POWERING_DOWN_WAIT_RELEASE,
+			TN_TO_POWER_OFF,
+			STATE_POWER_OFF
 		};
 
 
@@ -44,8 +44,7 @@ class myPowerButtonManager
 		long _powerUpMillis;
 		long _powerDownMillis;
 
-		long _startPoweringUp;
-		long _startPoweringDown;
+		long _heldDownStarted;
 
 		PowerUpEventCallback _callback;
 
