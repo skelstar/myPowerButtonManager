@@ -8,10 +8,9 @@ myPowerButtonManager::myPowerButtonManager( int button, int activeState, long po
 	_activeState = activeState;
 	_powerUpMillis = powerUpMillis;
 	_powerDownMillis = powerDownMillis;
-
 }
 //--------------------------------------------------------------------------------
-void myPowerButtonManager::begin() {
+void myPowerButtonManager::begin(uint16_t debugOptions) {
 
 	pinMode(_buttonPin, INPUT_PULLUP);
 
@@ -58,11 +57,11 @@ void myPowerButtonManager::begin() {
 	}
 
 	if (wakeupCausedByButton()) {
-		_state = STATE_POWERING_UP;
+		_state = TN_TO_POWERING_UP;
 		_callback(_state);
 	}
 	else {
-		_state = STATE_RUNNING;
+		_state = TN_TO_RUNNING;
 		_callback(_state);
 		_heldDownStarted = millis();
 	}
@@ -85,14 +84,13 @@ STATE_POWER_OFF
 */
 
 //--------------------------------------------------------------------------------
-void myPowerButtonManager::serviceButton(bool debug) {
+void myPowerButtonManager::serviceButton() {
 
 	long heldDownTime = 0;
 
 	switch (_state) {
 
 		case TN_TO_POWERING_UP:
-			if (debug) Serial.println("State: TN_TO_POWERING_UP\n");
 			_callback(TN_TO_POWERING_UP);
 			_heldDownStarted = millis();
 			_state = STATE_POWERING_UP;
@@ -109,7 +107,6 @@ void myPowerButtonManager::serviceButton(bool debug) {
 			}
 			break;
 		case TN_TO_POWERED_UP_WAIT_RELEASE:
-			if (debug) Serial.println("State: TN_TO_POWERED_UP_WAIT_RELEASE\n");
 			_callback(TN_TO_POWERED_UP_WAIT_RELEASE);
 			_state = STATE_POWERED_UP_WAIT_RELEASE;
 			break;
@@ -120,7 +117,6 @@ void myPowerButtonManager::serviceButton(bool debug) {
 			}
 			break;
 		case TN_TO_RUNNING:
-			if (debug) Serial.println("State: TN_TO_RUNNING\n");
 			_callback(TN_TO_RUNNING);
 			_state = STATE_RUNNING;
 			break;
@@ -131,7 +127,6 @@ void myPowerButtonManager::serviceButton(bool debug) {
 			}
 			break;
 		case TN_TO_POWERING_DOWN:
-			if (debug) Serial.println("State: TN_TO_POWERING_DOWN\n");
 			_callback(TN_TO_POWERING_DOWN);
 			_heldDownStarted = millis();
 			_state = STATE_POWERING_DOWN;
@@ -148,7 +143,6 @@ void myPowerButtonManager::serviceButton(bool debug) {
 			}
 			break;
 		case TN_TO_POWERING_DOWN_WAIT_RELEASE:
-			if (debug) Serial.println("State: TN_TO_POWERING_DOWN_WAIT_RELEASE\n");
 			_callback(TN_TO_POWERING_DOWN_WAIT_RELEASE);
 			_state = STATE_POWERING_DOWN_WAIT_RELEASE;
 			break;
@@ -158,7 +152,6 @@ void myPowerButtonManager::serviceButton(bool debug) {
 			}
 			break;
 		case TN_TO_POWER_OFF:
-			if (debug) Serial.println("State: TN_TO_POWER_OFF\n");
 			_callback(TN_TO_POWER_OFF);
 			break;
 		// case STATE_POWER_OFF:

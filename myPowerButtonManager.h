@@ -2,6 +2,7 @@
 #define myPowerButtonManager_h
 
 #include <Arduino.h>
+#include <debugHelper.h>
 
 class myPowerButtonManager 
 {
@@ -26,8 +27,8 @@ class myPowerButtonManager
 		typedef void ( *PowerUpEventCallback )( int state );
 
 		myPowerButtonManager( int button, int activeState, long powerupMillis, long powerDownMillis, PowerUpEventCallback callback );
-		void begin();
-		void serviceButton(bool debug);
+		void begin(uint16_t debugOptions);
+		void serviceButton();
 		bool isRunning();
 		void setState(uint8_t state);
 		uint8_t getState();
@@ -43,6 +44,8 @@ class myPowerButtonManager
 		uint8_t _activeState;
 		long _powerUpMillis;
 		long _powerDownMillis;
+
+		debugHelper _debug;
 
 		long _heldDownStarted;
 
