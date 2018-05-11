@@ -1,18 +1,37 @@
 #include "Arduino.h"
 #include "myPowerButtonManager.h"
 
+#define BUTTON_MODE_LOCAL	0
+#define BUTTON_MODE_EXT		1
 
+//--------------------------------------------------------------------------------
 myPowerButtonManager::myPowerButtonManager( int button, int activeState, long powerUpMillis, long powerDownMillis, PowerUpEventCallback callback ) {
+	_buttonMode = BUTTON_MODE_LOCAL;
+
 	_buttonPin = button;
-	_callback = callback;
 	_activeState = activeState;
 	_powerUpMillis = powerUpMillis;
 	_powerDownMillis = powerDownMillis;
+	_callback = callback;
+}
+//--------------------------------------------------------------------------------
+myPowerButtonManager::myPowerButtonManager( int button, int activeState, long powerupMillis, long powerDownMillis, PowerUpEventCallback callback, ButtonsPressed buttonsPressed ) {
+ 	//initialise( -1, activeState, powerupMillis, powerDownMillis, callback);
+	_buttonMode = BUTTON_MODE_EXT;
+
+	_buttonPin = button;
+	_activeState = activeState;
+	_buttonsPressed = buttonsPressed;
+	_powerUpMillis = powerupMillis;
+	_powerDownMillis = powerDownMillis;
+	_callback = callback;
 }
 //--------------------------------------------------------------------------------
 void myPowerButtonManager::begin(uint16_t debugOptions) {
 
-	pinMode(_buttonPin, INPUT_PULLUP);
+	// if (_buttonMode == BUTTON_MODE_LOCAL) {
+		pinMode(_buttonPin, INPUT_PULLUP);
+	// }
 
 	switch (_buttonPin) {
 		// case 1: esp_sleep_enable_ext0_wakeup(GPIO_NUM_1, activeState); break;
@@ -55,6 +74,7 @@ void myPowerButtonManager::begin(uint16_t debugOptions) {
 		case 38: esp_sleep_enable_ext0_wakeup(GPIO_NUM_38, _activeState == 1 ? 0 : 1); break;
 		case 39: esp_sleep_enable_ext0_wakeup(GPIO_NUM_39, _activeState == 1 ? 0 : 1); break;
 	}
+	
 
 	if (wakeupCausedByButton()) {
 		_state = TN_TO_POWERING_UP;
@@ -189,5 +209,10 @@ bool myPowerButtonManager::wakeupCausedByButton() {
 }
 //--------------------------------------------------------------------------------
 bool myPowerButtonManager::isPressed() {
-	return digitalRead(_buttonPin) != _activeState;
+	if (_buttonMode == BUTTON_MODE_LOCAL) {
+		return digitalRead(_buttonPin) != _activeState;
+	}
+	else if (_buttonMode == BUTTON_MODE_EXT) {
+		return _buttonsPressed();
+	}
 }

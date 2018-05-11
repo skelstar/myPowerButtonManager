@@ -1,12 +1,22 @@
 #include <myPowerButtonManager.h>
 
-#define POWER_UP_BUTTON 13
 
 void powerupEvent(int state);
+int powerButtonIsPressed();
 
-myPowerButtonManager powerButton(POWER_UP_BUTTON, HIGH, 3000, 3000, powerupEvent);
+#define POWER_WAKE_BUTTON_PIN	13
+#define POWER_OTHER_BUTTON_PIN	22
+
+myPowerButtonManager powerButton(POWER_WAKE_BUTTON_PIN, HIGH, 3000, 3000, powerupEvent, powerButtonIsPressed);
+
+int powerButtonIsPressed() {
+	return digitalRead(POWER_WAKE_BUTTON_PIN) == 0 && 
+			digitalRead(POWER_OTHER_BUTTON_PIN) == 0;
+}
 
 void powerupEvent(int state) {
+
+	Serial.printf("State: %d\n", state);
 
 	switch (state) {
 		case powerButton.TN_TO_POWERING_UP:
@@ -32,17 +42,17 @@ void powerupEvent(int state) {
 	}
 }
 
-//--------------------------------------------------------------------------------
 void setup() {
 	Serial.begin(9600);
-	Serial.printf("\nmyPowerButtonManager\n");
+	Serial.printf("Ready\n");
+
+	pinMode(POWER_WAKE_BUTTON_PIN, INPUT_PULLUP);
+	pinMode(POWER_OTHER_BUTTON_PIN, INPUT_PULLUP);
+//	digitalWrite(POWER_BUTTON_PIN, HIGH);
 
 	powerButton.begin(0);
 }
-//--------------------------------------------------------------------------------
+
 void loop() {
 	powerButton.serviceButton();
-
-	delay(100);
 }
-//--------------------------------------------------------------------------------

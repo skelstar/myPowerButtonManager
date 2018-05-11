@@ -25,8 +25,10 @@ class myPowerButtonManager
 
 
 		typedef void ( *PowerUpEventCallback )( int state );
+		typedef int ( *ButtonsPressed )( );
 
 		myPowerButtonManager( int button, int activeState, long powerupMillis, long powerDownMillis, PowerUpEventCallback callback );
+		myPowerButtonManager( int button, int activeState, long powerupMillis, long powerDownMillis, PowerUpEventCallback callback, ButtonsPressed ButtonsPressed );
 		void begin(uint16_t debugOptions);
 		void serviceButton();
 		bool isRunning();
@@ -34,6 +36,9 @@ class myPowerButtonManager
 		uint8_t getState();
 
 	private:
+
+		void initialise(int button, int activeState, long powerUpMillis, long powerDownMillis, PowerUpEventCallback callback );
+
 
 		bool wakeupCausedByButton();
 		bool isPressed();
@@ -45,11 +50,14 @@ class myPowerButtonManager
 		long _powerUpMillis;
 		long _powerDownMillis;
 
+		int _buttonMode;
+
 		debugHelper _debug;
 
 		long _heldDownStarted;
 
 		PowerUpEventCallback _callback;
+		ButtonsPressed _buttonsPressed;
 
 };
 
